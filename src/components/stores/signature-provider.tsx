@@ -19,9 +19,7 @@ export const SignatureStoreProvider = ({
   children,
 }: SignatureStoreProviderProps) => {
   const storeRef = useRef<SignatureStoreApi | null>(null);
-  if (storeRef.current === null) {
-    storeRef.current = createSignatureStore();
-  }
+  storeRef.current ??= createSignatureStore();
 
   return (
     <SignatureStoreContext.Provider value={storeRef.current}>

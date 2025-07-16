@@ -2,7 +2,7 @@
 
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
-import { z } from "zod/v4";
+import type { z } from "zod/v4";
 
 import {
   Form,
@@ -54,7 +54,7 @@ export function SignatureForm({
     const subscription = form.watch((value, { name }) => {
       if (name) {
         // Update only the changed field
-        updateStore({ [name]: value[name as keyof typeof value] });
+        updateStore({ [name]: (value as Record<string, unknown>)[name] });
       } else {
         // Update all fields
         updateStore(value);

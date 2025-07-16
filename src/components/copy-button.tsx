@@ -12,10 +12,10 @@ export function CopyButton({ ...props }: React.ComponentProps<typeof Button>) {
     (store) => store,
   );
 
-  const handleCopy = React.useCallback(() => {
+  const handleCopy = React.useCallback(async () => {
     const code = createSignature({ name, position, username, phone });
 
-    navigator.clipboard.writeText(code);
+    await navigator.clipboard.writeText(code);
 
     toast("Signatur wurde als HTML kopiert");
   }, [name, position, username, phone]);

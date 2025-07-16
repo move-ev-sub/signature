@@ -9,7 +9,7 @@ export function createSignature({
 }: SignatureProps) {
   const email = `${username}@${EMAIL_DOMAIN}`;
 
-  let boardMembers: string = "";
+  let boardMembers = "";
 
   BOARD_MEMBERS.forEach((member, index) => {
     let item = `<a
