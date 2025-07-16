@@ -8,7 +8,7 @@ export type SignatureState = SignatureProps;
 
 export type SignatureActions = {
   setName: (name: string) => void;
-  setPosition: (position: string) => void;
+  setPosition: (position: string | undefined) => void;
   setUsername: (username: string) => void;
   setPhone: (phone: string) => void;
 };

@@ -1,5 +1,9 @@
+"use client";
+
+import { createSignature } from "@/lib/signature";
 import { CopyIcon } from "lucide-react";
 import React from "react";
+import { toast } from "sonner";
 import { useSignatureStore } from "./stores/signature-provider";
 import { Button } from "./ui/button";
 
@@ -8,15 +12,16 @@ export function CopyButton({ ...props }: React.ComponentProps<typeof Button>) {
     (store) => store,
   );
 
-  const handleCopy = React.useCallback(() => {}, [
-    name,
-    position,
-    username,
-    phone,
-  ]);
+  const handleCopy = React.useCallback(() => {
+    const code = createSignature({ name, position, username, phone });
+
+    navigator.clipboard.writeText(code);
+
+    toast("Signatur wurde als HTML kopiert");
+  }, [name, position, username, phone]);
 
   return (
-    <Button {...props} onClick={handleCopy}>
+    <Button variant={"outline"} {...props} onClick={handleCopy}>
       <CopyIcon />
       Kopieren
     </Button>

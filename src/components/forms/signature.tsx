@@ -14,8 +14,11 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { EMAIL_DOMAIN } from "@/lib/consts";
+import type { SignatureProps } from "@/lib/types";
 import { cn } from "@/lib/utils";
 import { signatureSchema } from "@/lib/validations";
+import React from "react";
 import { useSignatureStore } from "../stores/signature-provider";
 
 export function SignatureForm({
@@ -34,6 +37,31 @@ export function SignatureForm({
       phone: store.phone,
     },
   });
+
+  // Efficient form watching with useCallback to prevent unnecessary re-renders
+  const updateStore = React.useCallback(
+    (values: Partial<SignatureProps>) => {
+      if (values.name !== undefined) store.setName(values.name);
+      if (values.phone !== undefined) store.setPhone(values.phone ?? "");
+      if (values.position !== undefined) store.setPosition(values.position);
+      if (values.username !== undefined) store.setUsername(values.username);
+    },
+    [store],
+  );
+
+  // Single useEffect with proper dependency management
+  React.useEffect(() => {
+    const subscription = form.watch((value, { name }) => {
+      if (name) {
+        // Update only the changed field
+        updateStore({ [name]: value[name as keyof typeof value] });
+      } else {
+        // Update all fields
+        updateStore(value);
+      }
+    });
+    return () => subscription.unsubscribe();
+  }, [form, updateStore]);
 
   // 2. Define a submit handler.
   function onSubmit(values: z.infer<typeof signatureSchema>) {
@@ -83,7 +111,7 @@ export function SignatureForm({
                   />
                 </FormControl>
                 <span className="text-muted-foreground shrink-0 text-sm">
-                  @move.de
+                  @{EMAIL_DOMAIN}
                 </span>
               </div>
               <FormDescription>
@@ -99,7 +127,7 @@ export function SignatureForm({
           name="phone"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Benutzername</FormLabel>
+              <FormLabel>Telefon</FormLabel>
               <FormControl>
                 <Input
                   placeholder="+49 123 456789"
